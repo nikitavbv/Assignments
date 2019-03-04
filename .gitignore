@@ -64,5 +64,10 @@ out/
 # Editor-based Rest Client
 .idea/httpRequests
 
+# rust
+src/main/rust/**/target
+src/main/rust/**/Cargo.lock
+**/*.rs.bk
+
 # university reports
 reports
