@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+    compile("org.knowm.xchart", "xchart", "3.2.2")
     testCompile("junit", "junit", "4.12")
 }
 
