@@ -28,7 +28,7 @@ public class Lab1 {
   private static final Color COLOR_VIOLET = new Color(142, 68, 173);
   private static final Color COLOR_YELLOW = new Color(241, 196, 15);
 
-  public static void main(String[] args) throws IOException  {
+  public static void main(String[] args) throws IOException {
     sortRandomArray(100);
     sortRandomArray(1000);
 
