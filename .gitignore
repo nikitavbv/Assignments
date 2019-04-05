@@ -60,6 +60,7 @@ cmake-build-*/
 
 # IntelliJ
 out/
+build/
 
 # Editor-based Rest Client
 .idea/httpRequests
