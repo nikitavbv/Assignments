@@ -17,4 +17,23 @@ public class MyHashTableTests {
     assertEquals(2, myHashTable.get("BB").get().intValue());
   }
 
+  @Test
+  public void testResize() {
+    MyHashTable<String, Integer> myHashTable = new MyHashTable<>(2, true);
+    myHashTable.put("foobar", 42);
+    myHashTable.put("Aa", 1);
+    myHashTable.put("BB", 2); // cause collision
+    myHashTable.put("hello", 5);
+    myHashTable.put("world", 5);
+    myHashTable.put("hello world", 10);
+
+    assertEquals(6, myHashTable.getSize());
+    assertEquals(42, myHashTable.get("foobar").get().intValue());
+    assertEquals(1, myHashTable.get("Aa").get().intValue());
+    assertEquals(2, myHashTable.get("BB").get().intValue());
+    assertEquals(5, myHashTable.get("hello").get().intValue());
+    assertEquals(5, myHashTable.get("world").get().intValue());
+    assertEquals(10, myHashTable.get("hello world").get().intValue());
+  }
+
 }
