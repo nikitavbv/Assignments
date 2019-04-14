@@ -73,6 +73,22 @@ public class MyHashTable<K, V> {
     return Optional.empty();
   }
 
+  public boolean containsKey(K key) {
+    return get(key).isPresent();
+  }
+
+  public V getOrDefault(K key, V defaultValue) {
+    return get(key).orElse(defaultValue);
+  }
+
+  public void clear() {
+    size = 0;
+    // noinspection unchecked
+    this.keyArr = (K[]) new Object[this.keyArr.length];
+    // noinspection unchecked
+    this.valArr = (V[]) new Object[this.valArr.length];
+  }
+
   public int getSize() {
     return size;
   }
