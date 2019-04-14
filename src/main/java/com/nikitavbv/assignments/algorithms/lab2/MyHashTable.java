@@ -69,11 +69,16 @@ public class MyHashTable<K, V> {
 
   public Optional<V> get(K key) {
     int pos = Math.abs(key.hashCode()) % keyArr.length;
+    int startPos = pos;
     while (keyArr[pos] != null) {
       if (keyArr[pos] == key && !this.removed[pos]) {
         return Optional.of(valArr[pos]);
       }
       pos = (pos + 1) % keyArr.length;
+      if (pos == startPos) {
+        // to avoid infinite loop when hash table is full and key is not found
+        break;
+      }
     }
 
     return Optional.empty();
