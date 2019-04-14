@@ -1,5 +1,7 @@
 package com.nikitavbv.assignments.algorithms.lab2;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Optional;
 
 public class MyLinkedListHashTable<K, V> implements MyHashTableInterface<K, V> {
@@ -15,6 +17,9 @@ public class MyLinkedListHashTable<K, V> implements MyHashTableInterface<K, V> {
   private int size = 0;
   private int capacity = 0;
   private boolean resizable;
+
+  private int totalCompares = 0;
+  private int totalAccess = 0;
 
   private class Node {
     K key;
@@ -90,6 +95,8 @@ public class MyLinkedListHashTable<K, V> implements MyHashTableInterface<K, V> {
   public Optional<V> get(K key) {
     Node cursor = front;
     while (cursor != null) {
+      totalAccess++;
+      totalCompares++;
       if (!cursor.removed && cursor.key == key) {
         return Optional.of(cursor.value);
       }
@@ -124,6 +131,31 @@ public class MyLinkedListHashTable<K, V> implements MyHashTableInterface<K, V> {
 
   public int getSize() {
     return size;
+  }
+
+  public void printTo(OutputStream out) throws IOException {
+    out.write("[".getBytes());
+    Node cursor = front;
+    for (int i = 0; i < capacity; i++) {
+      if (i > 0) {
+        out.write(',');
+      }
+      if (cursor == null || cursor.removed) {
+        continue;
+      }
+      out.write((cursor.key.toString() + ": " + cursor.value.toString()).getBytes());
+      cursor = cursor.next;
+    }
+    out.write("]".getBytes());
+    out.write('\n');
+  }
+
+  public int getTotalCompares() {
+    return totalCompares;
+  }
+
+  public int getTotalAccess() {
+    return totalAccess;
   }
 
 }

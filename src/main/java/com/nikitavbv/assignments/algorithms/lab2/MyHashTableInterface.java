@@ -12,4 +12,7 @@ public interface MyHashTableInterface<K, V> {
   public void clear();
   public int getSize();
 
+  int getTotalCompares();
+  int getTotalAccess();
+
 }

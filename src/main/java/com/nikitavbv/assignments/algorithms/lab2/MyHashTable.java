@@ -1,5 +1,7 @@
 package com.nikitavbv.assignments.algorithms.lab2;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Optional;
 
@@ -16,6 +18,8 @@ public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
   private boolean[] removed;
 
   private int size = 0;
+  private int totalCompares = 0;
+  private int totalAccess = 0;
   private boolean resizable;
 
   MyHashTable(int capacity, boolean resizable) {
@@ -71,6 +75,8 @@ public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
     int pos = Math.abs(key.hashCode()) % keyArr.length;
     int startPos = pos;
     while (keyArr[pos] != null) {
+      totalCompares+=2;
+      totalAccess+=2;
       if (keyArr[pos] == key && !this.removed[pos]) {
         return Optional.of(valArr[pos]);
       }
@@ -80,6 +86,8 @@ public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
         break;
       }
     }
+    totalCompares++;
+    totalAccess++;
 
     return Optional.empty();
   }
@@ -115,6 +123,29 @@ public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
 
   public int getSize() {
     return size;
+  }
+
+  public void printTo(OutputStream out) throws IOException {
+    out.write("[".getBytes());
+    for (int i = 0; i < keyArr.length; i++) {
+      if (i > 0) {
+        out.write(',');
+      }
+      if (keyArr[i] == null || removed[i]) {
+        continue;
+      }
+      out.write((keyArr[i].toString() + ": " + valArr[i].toString()).getBytes());
+    }
+    out.write("]".getBytes());
+    out.write('\n');
+  }
+
+  public int getTotalCompares() {
+    return totalCompares;
+  }
+
+  public int getTotalAccess() {
+    return totalAccess;
   }
 
 }
