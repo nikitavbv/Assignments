@@ -3,7 +3,7 @@ package com.nikitavbv.assignments.algorithms.lab2;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class MyHashTable<K, V> {
+public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
 
   private static final int DEFAULT_CAPACITY = 100;
   private static final boolean DEFAULT_RESIZABLE = true;
@@ -37,7 +37,7 @@ public class MyHashTable<K, V> {
   }
 
   public void put(K key, V value) {
-    if (size >= keyArr.length * LOAD_FACTOR_TO_RESIZE) {
+    if (size >= keyArr.length * LOAD_FACTOR_TO_RESIZE && resizable) {
       this.resize();
     }
     if (size == keyArr.length) throw new MyHashTableFullException();
@@ -55,7 +55,7 @@ public class MyHashTable<K, V> {
   }
 
   private void resize() {
-    MyHashTable<K, V> temp = new MyHashTable<>();
+    MyHashTable<K, V> temp = new MyHashTable<>(keyArr.length * SCALE_FACTOR, this.resizable);
     for (int i = 0; i < keyArr.length; i++) {
       if (keyArr[i] == null || this.removed[i]) {
         continue;
