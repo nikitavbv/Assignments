@@ -1,7 +1,9 @@
 package com.nikitavbv.assignments.algorithms.lab2;
 
 import java.awt.Color;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -14,10 +16,12 @@ import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.style.Styler;
 
+@SuppressWarnings("Duplicates")
 public class Lab2 {
 
   private static final int[] HASH_TABLE_SIZES = new int[] {100, 1000, 5000, 10000, 20000};
 
+  private static final boolean REQUEST_INPUT = true;
   private static final String LAB_IMAGES_DIR = "./reports/algorithms/lab2/images/";
   private static final String COMPARISONS_CHART_IMAGE_OUTPUT_PATH = LAB_IMAGES_DIR + "1";
   private static final String ACCESS_CHART_IMAGE_OUTPUT_PATH = LAB_IMAGES_DIR + "2";
@@ -25,6 +29,7 @@ public class Lab2 {
   private static Random random = new Random();
 
   public static void main(String[] args) throws IOException {
+    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     random.setSeed(43);
 
     MyHashTable<Integer, Integer> testArr100 = new MyHashTable<>(100, false);
@@ -32,9 +37,15 @@ public class Lab2 {
     keys.forEach(v -> testArr100.put(v, v * 2));
     System.out.println("Hash table - array implementation, " + keys.size() + " elements:");
     testArr100.printTo(System.out);
-    Integer keyToFind = (Integer) keys.toArray()[random.nextInt(keys.size())];
+    final Integer keyToFind;
+    if (REQUEST_INPUT) {
+      System.out.print("Element to find: ");
+      keyToFind = Integer.parseInt(reader.readLine());
+    } else {
+      keyToFind = (Integer) keys.toArray()[random.nextInt(keys.size())];
+    }
     Integer foundValue = testArr100.get(keyToFind)
-            .orElseThrow(() -> new RuntimeException("Requested key is not found"));
+            .orElseThrow(() -> new RuntimeException("Requested key " + keyToFind + " is not found"));
     System.out.println("Value for key " + keyToFind + " is " + foundValue);
 
     System.out.println("---------------------------------------------------------------------");
@@ -44,9 +55,15 @@ public class Lab2 {
     keys.forEach(v -> testLL1000.put(v, v * -3));
     System.out.println("Hash table - linked list implementation, " + keys.size() + " elements:");
     testLL1000.printTo(System.out);
-    keyToFind = (Integer) keys.toArray()[random.nextInt(keys.size())];
-    foundValue = testLL1000.get(keyToFind)
-            .orElseThrow(() -> new RuntimeException("Requested key is not found"));
+    final Integer secondKeyToFind;
+    if (REQUEST_INPUT) {
+      System.out.print("Element to find: ");
+      secondKeyToFind = Integer.parseInt(reader.readLine());
+    } else {
+      secondKeyToFind = (Integer) keys.toArray()[random.nextInt(keys.size())];
+    }
+    foundValue = testLL1000.get(secondKeyToFind)
+            .orElseThrow(() -> new RuntimeException("Requested key " + secondKeyToFind + " is not found"));
     System.out.println("Value for key " + keyToFind + " is " + foundValue);
 
     System.out.println("---------------------------------------------------------------------");
@@ -113,7 +130,7 @@ public class Lab2 {
   private static Set<Integer> randomUniqueIntegers(int total) {
     Set<Integer> result = new HashSet<>();
     while (result.size() < total) {
-      result.add(random.nextInt());
+      result.add(random.nextInt(100000));
     }
     return result;
   }

@@ -77,7 +77,7 @@ public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
     while (keyArr[pos] != null) {
       totalCompares+=2;
       totalAccess+=2;
-      if (keyArr[pos] == key && !this.removed[pos]) {
+      if (keyArr[pos].equals(key) && !this.removed[pos]) {
         return Optional.of(valArr[pos]);
       }
       pos = (pos + 1) % keyArr.length;
@@ -103,7 +103,7 @@ public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
   public void remove(K key) {
     int pos = Math.abs(key.hashCode()) % keyArr.length;
     while (keyArr[pos] != null) {
-      if (keyArr[pos] == key && !this.removed[pos]) {
+      if (keyArr[pos].equals(key) && !this.removed[pos]) {
         this.removed[pos] = true;
         return;
       }

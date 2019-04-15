@@ -97,7 +97,7 @@ public class MyLinkedListHashTable<K, V> implements MyHashTableInterface<K, V> {
     while (cursor != null) {
       totalAccess++;
       totalCompares++;
-      if (!cursor.removed && cursor.key == key) {
+      if (!cursor.removed && cursor.key.equals(key)) {
         return Optional.of(cursor.value);
       }
       cursor = cursor.next;
@@ -117,7 +117,7 @@ public class MyLinkedListHashTable<K, V> implements MyHashTableInterface<K, V> {
   public void remove(K key) {
     Node cursor = front;
     while (cursor != null) {
-      if (!cursor.removed && cursor.key == key) {
+      if (!cursor.removed && cursor.key.equals(key)) {
         cursor.removed = true;
       }
       cursor = cursor.next;
