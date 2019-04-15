@@ -5,7 +5,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class MyHashTable<K, V> implements MyHashTableInterface<K, V> {
+public class MyHashTable<K, V> {
 
   private static final int DEFAULT_CAPACITY = 100;
   private static final boolean DEFAULT_RESIZABLE = true;
