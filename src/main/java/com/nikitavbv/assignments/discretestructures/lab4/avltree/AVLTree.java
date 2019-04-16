@@ -72,6 +72,8 @@ public class AVLTree<T extends Comparable<T>> {
   }
 
   private AVLTreeNode<T> top = null;
+  private int totalLeftRotates = 0;
+  private int totalRightRotates = 0;
 
   private AVLTreeNode<T> leftRotate(AVLTreeNode<T> node) {
     AVLTreeNode<T> right = node.right;
@@ -80,6 +82,8 @@ public class AVLTree<T extends Comparable<T>> {
 
     node.updateSubtreeHeight();
     right.updateSubtreeHeight();
+
+    totalLeftRotates++;
 
     return right;
   }
@@ -91,6 +95,8 @@ public class AVLTree<T extends Comparable<T>> {
 
     left.updateSubtreeHeight();
     node.updateSubtreeHeight();
+
+    totalRightRotates++;
 
     return left;
   }
@@ -240,4 +246,11 @@ public class AVLTree<T extends Comparable<T>> {
     return elements;
   }
 
+  public int getTotalLeftRotates() {
+    return totalLeftRotates;
+  }
+
+  public int getTotalRightRotates() {
+    return totalRightRotates;
+  }
 }

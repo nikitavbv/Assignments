@@ -16,6 +16,8 @@ public class RBTree<T extends Comparable> {
   }
 
   public Node<T> root = null;
+  private int totalSingleTurns = 0;
+  private int totalDoubleTurns = 0;
 
   Node single(Node root, boolean turnRight) {
     Node save = root.links[turnRight ? 0 : 1];
@@ -23,11 +25,15 @@ public class RBTree<T extends Comparable> {
     save.links[turnRight ? 1 : 0] = root;
     root.red = true;
     save.red = false;
+
+    totalSingleTurns++;
+
     return save;
   }
 
   Node doubleTurn(Node root, boolean turnRight) {
     root.links[turnRight ? 0 : 1] = single(root.links[turnRight ? 0 : 1], !turnRight);
+    totalDoubleTurns++;
     return single(root, turnRight);
   }
 
@@ -182,4 +188,11 @@ public class RBTree<T extends Comparable> {
     printInfix(out, top.links[1]);
   }
 
+  public int getTotalSingleTurns() {
+    return totalSingleTurns;
+  }
+
+  public int getTotalDoubleTurns() {
+    return totalDoubleTurns;
+  }
 }
