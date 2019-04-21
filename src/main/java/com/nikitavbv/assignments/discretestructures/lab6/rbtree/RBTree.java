@@ -7,20 +7,22 @@ public class RBTree<T extends Comparable> {
 
   public class Node<E extends T> {
     private boolean red = true; // init as red
-    public E data;
-    Node[] links = new Node[2]; // 0 is left child, 1 is right child
+    E data;
+    Node<E>[] links; // 0 is left child, 1 is right child
 
     private Node(E data) {
       this.data = data;
+      //noinspection unchecked
+      links = new Node[2];
     }
   }
 
-  public Node<T> root = null;
+  private Node<T> root = null;
   private int totalSingleTurns = 0;
   private int totalDoubleTurns = 0;
 
-  Node single(Node root, boolean turnRight) {
-    Node save = root.links[turnRight ? 0 : 1];
+  private Node<T> single(Node<T> root, boolean turnRight) {
+    Node<T> save = root.links[turnRight ? 0 : 1];
     root.links[turnRight ? 0 : 1] = save.links[turnRight ? 1 : 0];
     save.links[turnRight ? 1 : 0] = root;
     root.red = true;
@@ -31,7 +33,7 @@ public class RBTree<T extends Comparable> {
     return save;
   }
 
-  Node doubleTurn(Node root, boolean turnRight) {
+  private Node<T> doubleTurn(Node<T> root, boolean turnRight) {
     root.links[turnRight ? 0 : 1] = single(root.links[turnRight ? 0 : 1], !turnRight);
     totalDoubleTurns++;
     return single(root, turnRight);
@@ -43,56 +45,59 @@ public class RBTree<T extends Comparable> {
       root = new Node<>(data);
     } else {
       // if tree already contains at least one element
-      Node head = new Node(null); // temporary tree root
-      Node g, t;
-      Node p, q;
-      boolean dir = false;
-      boolean last = false;
+      Node<T> head = new Node<>(null); // temporary tree root
+      Node<T> grandParent, parentTemp;
+      Node<T> parent, cursor;
+      boolean turnDirection = false;
+      boolean lastTurnDirection = false;
 
-      t = head;
-      g = null;
-      p = null;
-      q = root;
-      t.links[1] = root;
+      parentTemp = head;
+      grandParent = null;
+      parent = null;
+      cursor = root;
+      parentTemp.links[1] = root;
 
       // iterate over tree
       while (true) {
-        if (q == null) {
+        if (cursor == null) {
           // insert node
-          q = new Node(data);
-          p.links[dir ? 1 : 0] = q;
-        } else if (q.links[0] != null && q.links[0].red && q.links[1] != null && q.links[1].red) {
+          cursor = new Node<>(data);
+          parent.links[turnDirection ? 1 : 0] = cursor;
+        } else if (cursor.links[0] != null && cursor.links[0].red && cursor.links[1] != null && cursor.links[1].red) {
           // change color, first case.
-          q.red = true;
-          q.links[0].red = false;
-          q.links[1].red = false;
+          cursor.red = true;
+          cursor.links[0].red = false;
+          cursor.links[1].red = false;
         }
 
-        if (q != null && q.red && p != null && p.red) {
+        if (cursor.red && parent != null && parent.red) {
           // two red colors
-          boolean dir2 = t.links[1] == g;
+          boolean dir2 = parentTemp.links[1] == grandParent;
 
-          if (q == p.links[last ? 1 : 0]) {
-            t.links[dir2 ? 1 : 0] = single(g, !last); // single turn, second case.
+          if (cursor == parent.links[lastTurnDirection ? 1 : 0]) {
+            //noinspection ConstantConditions
+            parentTemp.links[dir2 ? 1 : 0] = single(grandParent, !lastTurnDirection); // single turn, second case.
           } else {
-            t.links[dir2 ? 1 : 0] = doubleTurn(g, !last); // double turn, third case.
+            //noinspection ConstantConditions
+            parentTemp.links[dir2 ? 1 : 0] = doubleTurn(grandParent, !lastTurnDirection); // double turn, third case.
           }
         }
 
         // if this node already exists - break.
-        if (q.data.equals(data)) {
+        if (cursor.data.equals(data)) {
           break;
         }
 
-        last = dir;
-        dir = q.data.compareTo(data) < 0;
+        lastTurnDirection = turnDirection;
+        //noinspection unchecked
+        turnDirection = cursor.data.compareTo(data) < 0;
 
-        if (g != null) {
-          t = g;
+        if (grandParent != null) {
+          parentTemp = grandParent;
         }
-        g = p;
-        p = q;
-        q = q.links[dir ? 1 : 0];
+        grandParent = parent;
+        parent = cursor;
+        cursor = cursor.links[turnDirection ? 1 : 0];
       }
 
       // update root
@@ -103,57 +108,60 @@ public class RBTree<T extends Comparable> {
     root.red = false;
   }
 
+  @SuppressWarnings("unused")
   public void remove(T data) {
     if (root != null) {
-      Node head = new Node(null); // temporary pointer to tree root
-      Node q, p, g; // helpers
-      Node f = null; // node to be removed
-      boolean dir = true;
+      Node<T> head = new Node<>(null); // temporary pointer to tree root
+      Node<T> cursor, parent, grandParent; // helpers
+      Node<T> nodeToRemove = null;
+      boolean turnDirection = true;
 
-      q = head;
-      g = null;
-      p = null;
-      q.links[1] = root;
+      cursor = head;
+      parent = null;
+      cursor.links[1] = root;
 
-      while (q.links[dir ? 1 : 0] != null) {
-        boolean last = dir;
+      while (cursor.links[turnDirection ? 1 : 0] != null) {
+        boolean last = turnDirection;
 
         // save structure to helpers
-        g = p;
-        p = q;
-        q = q.links[dir ? 1 : 0];
-        dir = q.data.compareTo(data) < 0;
+        grandParent = parent;
+        parent = cursor;
+        cursor = cursor.links[turnDirection ? 1 : 0];
+        //noinspection unchecked
+        turnDirection = cursor.data.compareTo(data) < 0;
 
-        if (q.data.equals(data)) {
+        if (cursor.data.equals(data)) {
           // save found node
-          f = q;
+          nodeToRemove = cursor;
         }
 
-        if (!(q != null && q.red) && !(q.links[dir ? 1 : 0] != null && q.links[dir ? 1 : 0] != null)) {
-          if (q.links[dir ? 0 : 1] != null && q.links[dir ? 0 : 1].red) {
-            p.links[last ? 1 : 0] = single(q, dir); // single turn of first type
-            p = p.links[last ? 1 : 0];
-          } else if (!(q.links[dir ? 0 : 1] != null && q.links[dir ? 0 : 1].red)) {
-            Node s = p.links[last ? 0 : 1];
+        if (!cursor.red && cursor.links[turnDirection ? 1 : 0] == null) {
+          if (cursor.links[turnDirection ? 0 : 1] != null && cursor.links[turnDirection ? 0 : 1].red) {
+            parent.links[last ? 1 : 0] = single(cursor, turnDirection); // single turn of first type
+            parent = parent.links[last ? 1 : 0];
+          } else if (!(cursor.links[turnDirection ? 0 : 1] != null && cursor.links[turnDirection ? 0 : 1].red)) {
+            Node<T> s = parent.links[last ? 0 : 1];
             if (s != null) {
-              if (!(s.links[last ? 0 : 1] != null && s.links[last ? 0 : 1].red) && !(s.links[last ? 1 : 0] != null && s.links[last ? 1 : 0].red)) {
+              if (!(s.links[last ? 0 : 1] != null && s.links[last ? 0 : 1].red) && !(s.links[last ? 1 : 0] != null
+                      && s.links[last ? 1 : 0].red)) {
                 // first case - change colors
-                p.red = false;
+                parent.red = false;
                 s.red = true;
-                q.red = true;
+                cursor.red = true;
               } else {
-                boolean dir2 = (g.links[1] == p);
+                assert grandParent != null;
+                boolean dir2 = (grandParent.links[1] == parent);
 
                 if (s.links[last ? 1 : 0]  != null && s.links[last ? 1 : 0].red) {
-                  g.links[dir2 ? 1 : 0] = doubleTurn(p, last); // third case - double turn
+                  grandParent.links[dir2 ? 1 : 0] = doubleTurn(parent, last); // third case - double turn
                 } else if (s.links[last ? 0 : 1] != null && s.links[last ? 0 : 1].red) {
-                  g.links[dir2 ? 1 : 0] = single(p, last); // fourth case - single turn of second type
+                  grandParent.links[dir2 ? 1 : 0] = single(parent, last); // fourth case - single turn of second type
                 }
 
-                q.red = true;
-                g.links[dir2 ? 1 : 0].red = true;
-                g.links[dir2 ? 1 : 0].links[0].red = false;
-                g.links[dir2 ? 1 : 0].links[1].red = false;
+                cursor.red = true;
+                grandParent.links[dir2 ? 1 : 0].red = true;
+                grandParent.links[dir2 ? 1 : 0].links[0].red = false;
+                grandParent.links[dir2 ? 1 : 0].links[1].red = false;
               }
             }
           }
@@ -161,9 +169,9 @@ public class RBTree<T extends Comparable> {
       }
 
       // remove node
-      if (f != null) {
-        f.data = q.data;
-        p.links[p.links[1] == q ? 1 : 0] = q.links[q.links[0] == null ? 1 : 0];
+      if (nodeToRemove != null) {
+        nodeToRemove.data = cursor.data;
+        parent.links[parent.links[1] == cursor ? 1 : 0] = cursor.links[cursor.links[0] == null ? 1 : 0];
       }
 
       // tree root is always black
@@ -174,10 +182,12 @@ public class RBTree<T extends Comparable> {
     }
   }
 
+  @SuppressWarnings("unused")
   public void printInfix(OutputStream out) throws IOException {
     printInfix(out, root);
   }
 
+  @SuppressWarnings("WeakerAccess")
   public void printInfix(OutputStream out, Node<T> top) throws IOException {
     if (top == null) {
       return;

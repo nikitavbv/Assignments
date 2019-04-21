@@ -63,7 +63,7 @@ public class Lab6 {
     List<Integer> treeSizes = new ArrayList<>();
     Map<Integer, AVLTreeMetrics> avlTreeMetricsMap = new HashMap<>() ;
     Map<Integer, RBTreeMetrics> rbTreeMetricsMap = new HashMap<>();
-    for (int k = 1000; k < 10000; k+=100) {
+    for (int k = 1000; k <= 10000; k+=1000) {
       avlTreeMetricsMap.put(k, runAVLTreeTest(k));
       rbTreeMetricsMap.put(k, runRBTreeTest(k));
       treeSizes.add(k);
