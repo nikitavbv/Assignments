@@ -72,3 +72,5 @@ src/main/rust/**/Cargo.lock
 
 # university reports
 reports
+data/btree
+output
