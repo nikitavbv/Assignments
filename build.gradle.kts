@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     compile("org.knowm.xchart", "xchart", "3.2.2")
+    compile("org.apache.httpcomponents", "httpclient", "4.5.8")
+    compile("org.json", "json", "20090211")
     testCompile("junit", "junit", "4.12")
 }
 
