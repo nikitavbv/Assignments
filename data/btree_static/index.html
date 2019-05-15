@@ -1,0 +1,51 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie-edge">
+    <title>B-Tree</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <link rel="stylesheet" href="/app.css" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+</head>
+<body>
+<div class="blocks">
+<h1>Insert key</h1>
+<div class="block">
+    <input placeholder="key" id="keyInput" />
+    <input placeholder="value" id="valueInput" />
+    Result: <div id="insertResult"></div>
+    <button onclick="insertKey()">Save</button>
+</div>
+
+<h1>Search value</h1>
+<div class="block">
+    <input placeholder="key" id="searchKeyInput" />
+    Result: <div id="searchResult"></div>
+    <button onclick="searchKey()">Search</button>
+</div>
+
+<h1>Update value</h1>
+<div class="block">
+    <input placeholder="key" id="updateKeyInput" />
+    <input placeholder="value" id="updateValueInput" />
+    Result: <div id="updateKeyResult"></div>
+    <button onclick="updateKey()">Update</button>
+</div>
+
+<h1>Delete value</h1>
+<div class="block">
+    <input placeholder="key" id="deleteKeyInput" />
+    Result: <div id="deleteKeyResult"></div>
+    <button onclick="deleteKey()">Delete</button>
+</div>
+</div>
+
+<h1>All values</h1>
+<button onclick="loadAllValues()">Load</button>
+<div id="tableContainer"></div>
+
+</body>
+<script type="application/javascript" src="/app.js"></script>
+</html>

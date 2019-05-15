@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -32,7 +33,7 @@ public class Lab4 {
     GoogleMapsAPI api = new GoogleMapsAPI(loadGoogleMapsAPIKey(), REGION);
 
     makeDistanceMatrix(api);
-    printDistanceMatrix();
+    printDistanceMatrix(api);
     Graph graph = new Graph(distanceMatrix);
     runGreedySearch(api, graph);
     runAStarSearch(api, graph);
@@ -41,6 +42,7 @@ public class Lab4 {
   private static void runGreedySearch(GoogleMapsAPI api, Graph graph) throws IOException {
     System.out.println("Greedy search");
     GreedySearch search = new GreedySearch();
+    PrintWriter pw = new PrintWriter(new File("output/algorithms/lab4/greedy"));
     Location[] cityLocations = Arrays.stream(CITIES).map(city -> {
       try {
         return api.getCityLocation(city);
@@ -54,15 +56,17 @@ public class Lab4 {
           continue;
         }
         List<Integer> route = search.findRoute(graph, i, j, cityLocations);
-        System.out.println(CITIES[i] + " -> " + CITIES[j] + " distance: " + String.format("%.3f", calculateDistance(api, route))
-                + "km. Route: " + route.stream().map(n -> CITIES[n]).collect(Collectors.joining("->")));
+        pw.write(CITIES[i] + " -> " + CITIES[j] + " distance: " + String.format("%.3f", calculateDistance(api, route))
+                + "km. Route: " + route.stream().map(n -> CITIES[n]).collect(Collectors.joining("->")) + "\n");
       }
     }
+    pw.close();
   }
 
   private static void runAStarSearch(GoogleMapsAPI api, Graph graph) throws IOException {
     System.out.println("A* search");
     AStarSearch search = new AStarSearch();
+    PrintWriter pw = new PrintWriter(new File("output/algorithms/lab4/a_star"));
     Location[] cityLocations = Arrays.stream(CITIES).map(city -> {
       try {
         return api.getCityLocation(city);
@@ -76,10 +80,11 @@ public class Lab4 {
           continue;
         }
         List<Integer> route = search.findRoute(graph, i, j, cityLocations);
-        System.out.println(CITIES[i] + " -> " + CITIES[j] + " distance: " + String.format("%.3f", calculateDistance(api, route))
-                + "km. Route: " + route.stream().map(n -> CITIES[n]).collect(Collectors.joining("->")));
+        pw.write(CITIES[i] + " -> " + CITIES[j] + " distance: " + String.format("%.3f", calculateDistance(api, route))
+                + "km. Route: " + route.stream().map(n -> CITIES[n]).collect(Collectors.joining("->")) + "\n");
       }
     }
+    pw.close();
   }
 
   private static double calculateDistance(GoogleMapsAPI api, List<Integer> route) throws IOException {
@@ -97,12 +102,16 @@ public class Lab4 {
     return distance / 1000;
   }
 
-  private static void printDistanceMatrix() {
+  private static void printDistanceMatrix(GoogleMapsAPI api) throws IOException {
     System.out.println("\t" + String.join("\t", CITIES));
     for (int i = 0; i < CITIES.length; i++) {
       System.out.print(CITIES[i] + "\t");
-      Stream<String> result = Arrays.stream(distanceMatrix[i]).mapToObj(d -> d == -1 ? "-" : (d/1000) + "km");
-      System.out.println(result.collect(Collectors.joining("\t")));
+      for (int j = 0; j < CITIES.length; j++) {
+        System.out.printf("%.3fkm\t", api.getCityLocation(CITIES[i]).distanceTo(api.getCityLocation(CITIES[j])) / 1000);
+      }
+      System.out.println();
+      //Stream<String> result = Arrays.stream(distanceMatrix[i]).mapToObj(d -> d == -1 ? "-" : (d/1000) + "km");
+      //System.out.println(result.collect(Collectors.joining("\t")));
     }
   }
 

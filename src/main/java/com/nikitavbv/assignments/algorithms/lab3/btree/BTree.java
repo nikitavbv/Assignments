@@ -1,10 +1,15 @@
 package com.nikitavbv.assignments.algorithms.lab3.btree;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Arrays;
 
 public class BTree {
@@ -30,6 +35,7 @@ public class BTree {
     this.treeDirectoryFile = treeDirectoryFile;
     this.rootNodeID = rootNodeID;
     this.root = getNodeByID(rootNodeID);
+    this.load();
   }
 
   BTreeNode createNewNode() {
@@ -38,7 +44,37 @@ public class BTree {
 
   BTreeNode createNewNode(byte[] data, int totalKeys) {
     nodeIDCounter++;
+    this.save();
     return new BTreeNode(this, nodeIDCounter, data, totalKeys);
+  }
+
+  private void load() {
+    try {
+      File meta = getMetaFile();
+      if (!meta.exists()) {
+        return;
+      }
+      BufferedReader reader = new BufferedReader(new FileReader(meta));
+      this.nodeIDCounter = Integer.parseInt(reader.readLine());
+      this.rootNodeID = Integer.parseInt(reader.readLine());
+      this.root = getNodeByID(this.rootNodeID);
+      reader.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private void save() {
+    try {
+      File treeFile = getMetaFile();
+      PrintWriter pw = new PrintWriter(new FileWriter(treeFile));
+      pw.write(Integer.toString(nodeIDCounter));
+      pw.write("\n");
+      pw.write(Integer.toString(rootNodeID));
+      pw.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 
   BTreeNode getNodeByID(int nodeID) {
@@ -69,6 +105,10 @@ public class BTree {
     }
   }
 
+  private File getMetaFile() {
+    return new File(getTreeDirectoryFile(), "meta");
+  }
+
   private File getNodeFile(int nodeID) {
     return new File(getTreeDirectoryFile(), "node_" + nodeID);
   }
@@ -84,6 +124,14 @@ public class BTree {
 
   public void addKeys(int... keys) {
     Arrays.stream(keys).forEach(this::insertData);
+  }
+
+  public byte[] getData(int key) {
+    return root.findDataForKey(key);
+  }
+
+  public void updateData(int key, byte[] data) {
+    root.updateData(key, data);
   }
 
   public void insertData(int key) {
@@ -136,5 +184,9 @@ public class BTree {
 
   int getRowLength() {
     return (KEY_LENGTH + dataEntryLength) * (2 * t - 1) + POINTER_LENGTH * 2 * t;
+  }
+
+  public BTreeNode getRootNode() {
+    return root;
   }
 }

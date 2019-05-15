@@ -21,6 +21,8 @@ public class BTreeNode {
   private int totalKeys = 0;
   private boolean isLeaf = true;
 
+  public int comparisons = 0;
+
   public BTreeNode(BTree tree, int nodeID, byte[] data, int totalKeys) {
     if (data.length != tree.getRowLength()) {
       throw new IllegalArgumentException("Data length is not valid for this tree");
@@ -151,7 +153,7 @@ public class BTreeNode {
       } else if (getKeyAtPosition(0) > key) {
         return 0;
       } else {
-        throw new RuntimeException(String.format("Key %d is already present", key));
+        throw new KeyAlreadyExistsException(key);
       }
     }
 
@@ -170,7 +172,7 @@ public class BTreeNode {
       } else if (cursorKey > key) {
         last = cursor - 1;
       } else if (cursorKey == key) {
-        throw new RuntimeException(String.format("Key %d is already present", key));
+        throw new KeyAlreadyExistsException(key);
       }
     }
 
@@ -269,9 +271,12 @@ public class BTreeNode {
     while (begin <= last) {
       cursor = (begin + last) / 2;
       int cursorKey = getKeyAtPosition(cursor);
-
+      comparisons++;
       if (cursorKey < key && (cursor + 1 == totalKeys || getKeyAtPosition(cursor + 1) > key)) {
-        return tree.getNodeByID(getChildNodeIDAtPos(cursor + 1)).findDataForKey(key);
+        BTreeNode node = tree.getNodeByID(getChildNodeIDAtPos(cursor + 1));
+        byte[] r = node.findDataForKey(key);
+        this.comparisons+=node.comparisons;
+        return r;
       } else if (cursorKey < key) {
         begin = cursor + 1;
       } else if (cursorKey > key) {
@@ -338,10 +343,23 @@ public class BTreeNode {
     return findKeyInThisNode(key) != -1;
   }
 
+  void updateData(int key, byte[] data) {
+    int pos = findKeyInThisNode(key);
+    if (pos == -1) {
+      if (isLeaf()) {
+        throw new KeyNotFoundException(key);
+      }
+      pos = findInsertPosition(key);
+      tree.getNodeByID(getChildNodeIDAtPos(pos)).updateData(key, data);
+      return;
+    }
+    writeDataAtPosition(pos, data);
+  }
+
   void removeKey(int key) {
     int pos = findKeyInThisNode(key);
     if (pos == -1) {
-      throw new AssertionError("Key is not found: " + key);
+      throw new KeyNotFoundException(key);
     }
 
     byte[] newRow = new byte[row.length];
@@ -399,6 +417,63 @@ public class BTreeNode {
 
   private int getPosStartByte(int pos) {
     return POINTER_LENGTH + pos * (KEY_LENGTH + dataEntryLength + POINTER_LENGTH);
+  }
+
+  public List<Pair<Integer, byte[]>> getKeysAndDataRecursive() {
+    List<Pair<Integer, byte[]>> result = new ArrayList<>();
+    for (int i = 0; i < totalKeys; i++) {
+      result.add(new Pair<>(getKeyAtPosition(i), getDataAtPosition(i)));
+      if (getChildNodeIDAtPos(i) != 0) {
+        result.addAll(tree.getNodeByID(getChildNodeIDAtPos(i)).getKeysAndDataRecursive());
+      }
+    }
+    if (getChildNodeIDAtPos(totalKeys) != 0) {
+      result.addAll(tree.getNodeByID(getChildNodeIDAtPos(totalKeys)).getKeysAndDataRecursive());
+    }
+    return result;
+  }
+
+  public String renderToHtml(boolean root) {
+    if (totalKeys == 0) {
+      return "<div class=\"btree-node\">empty node</div>";
+    }
+
+    StringBuilder result = new StringBuilder("<div class=\"btree-node\"><div class=\"btree-node-keys\">");
+    if (root) {
+      result = new StringBuilder("<div class=\"btree-node-root\"><div class=\"btree-node-keys\">");
+    }
+
+    List<Integer> children = new ArrayList<>();
+
+    if (totalKeys == 1) {
+      result.append("<div class=\"btree-node-key btree-node-only-key\">").append(getKeyAtPosition(0)).append("</div>");
+      children.add(getChildNodeIDAtPos(0));
+    } else {
+      for (int i = 0; i < totalKeys; i++) {
+        if (i == 0) {
+          result.append("<div class=\"btree-node-key btree-node-first-key\">");
+        } else if (i == totalKeys - 1) {
+          result.append("<div class=\"btree-node-key btree-node-last-key\">");
+        } else {
+          result.append("<div class=\"btree-node-key\">");
+        }
+        result.append(getKeyAtPosition(i)).append("</div>");
+        children.add(getChildNodeIDAtPos(i));
+      }
+    }
+    children.add(getChildNodeIDAtPos(totalKeys));
+    result.append("</div><div class=\"btree-node-children\">");
+
+    for (Integer child : children) {
+      if (child == 0) {
+        result.append("<div class=\"btree-node-empty\"></div>");
+      } else {
+        result.append(tree.getNodeByID(child).renderToHtml(false));
+      }
+    }
+
+    result.append("</div></div>");
+    return result.toString();
   }
 
   boolean isLeaf() {
