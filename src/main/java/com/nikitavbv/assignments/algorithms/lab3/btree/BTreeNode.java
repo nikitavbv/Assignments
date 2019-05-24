@@ -21,7 +21,10 @@ public class BTreeNode {
   private int totalKeys = 0;
   private boolean isLeaf = true;
 
-  public int comparisons = 0;
+  static int a = 0;
+  static int b = 0;
+
+  //public int comparisons = 0;
 
   public BTreeNode(BTree tree, int nodeID, byte[] data, int totalKeys) {
     if (data.length != tree.getRowLength()) {
@@ -271,11 +274,11 @@ public class BTreeNode {
     while (begin <= last) {
       cursor = (begin + last) / 2;
       int cursorKey = getKeyAtPosition(cursor);
-      comparisons++;
+      //comparisons++;
       if (cursorKey < key && (cursor + 1 == totalKeys || getKeyAtPosition(cursor + 1) > key)) {
         BTreeNode node = tree.getNodeByID(getChildNodeIDAtPos(cursor + 1));
         byte[] r = node.findDataForKey(key);
-        this.comparisons+=node.comparisons;
+        //this.comparisons+=node.comparisons;
         return r;
       } else if (cursorKey < key) {
         begin = cursor + 1;

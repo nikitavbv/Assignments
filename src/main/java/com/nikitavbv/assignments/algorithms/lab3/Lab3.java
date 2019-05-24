@@ -28,13 +28,13 @@ public class Lab3 {
       bTree.addKeys(i);
     }
 
-    bTree.getRootNode().comparisons = 0;
+    /*bTree.getRootNode().comparisons = 0;
     Random random = new Random();
     for (int i = 0; i < 15; i++) {
       bTree.getRootNode().comparisons = 0;
       bTree.getData(random.nextInt(10000));
       System.out.println(i + "\t" + bTree.getRootNode().comparisons);
-    }
+    }*/
   }
 
   private static void bootstrapWebUI() {
