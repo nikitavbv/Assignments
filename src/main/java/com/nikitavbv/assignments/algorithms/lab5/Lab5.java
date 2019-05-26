@@ -7,7 +7,7 @@ public class Lab5 {
   private static final int TOTAL_GRAPH_NODES = 100;
   private static final int GRAPH_MAX_NODES_CONNECTIONS = 20;
   private static final int GRAPH_MIN_NODES_CONNECTIONS = 1;
-  private static final int REPORTING_STEP = 100;
+  private static final int REPORTING_STEP = 10;
   private static final int ITERATIONS_STEP = 2000;
   private static final int TOTAL_BEES = 300;
   private static final int TOTAL_SCOUT_BEES = 20;
@@ -43,7 +43,7 @@ public class Lab5 {
         prevScore = algo.best().getScore();
       }
       if (iter % REPORTING_STEP == 0) {
-        System.out.println("Iteration: " + iter + " Colors: " + algo.best().totalColors() + " Score: " + algo.best().getScore());
+        System.out.println("Iteration: " + iter + " Colors: " + algo.best().totalColors() + " " + algo.best().colorSeqToString());
       }
       algo.runIteration();
       iter++;
