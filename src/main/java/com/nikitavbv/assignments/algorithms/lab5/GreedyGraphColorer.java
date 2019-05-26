@@ -2,14 +2,11 @@ package com.nikitavbv.assignments.algorithms.lab5;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class GreedyGraphColorer implements GraphColorer {
-
-  private Random random;
 
   @Override
   public ColoredGraph color(Graph graph) {
