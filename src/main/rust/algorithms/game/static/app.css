@@ -1,0 +1,193 @@
+html {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14pt;
+    background-color: #EEEEEE;
+}
+
+body > div {
+    width: 100%;
+}
+
+h1 {
+    width: 100%;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 100;
+    font-size: 36pt;
+    padding: 0;
+    margin: 10px 0;
+}
+
+.screen-menu {
+}
+
+.screen-menu > div {
+    margin: 8px auto;
+    width: fit-content;
+    line-height: 46px;
+}
+
+.screen-menu label {
+    padding: 0 6px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    font-size: 16pt;
+}
+
+.screen-menu input {
+    border: 0;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    outline: none;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14pt;
+    padding: 0;
+}
+
+.screen-menu select {
+    border: 0;
+    height: 30px;
+    text-align: center;
+    outline: none;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14pt;
+    background-color: white;
+}
+
+.screen-menu button {
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 100;
+    font-size: 14pt;
+    outline: none;
+    cursor: pointer;
+    width: 200px;
+    height: 40px;
+    transition: all 0.4s ease-out;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#playBlue {
+    background-color: #2196F3;
+    border-color: #2196F3;
+    color: white;
+}
+
+#playRed {
+    background-color: #F44336;
+    border-color: #F44336;
+    color: white;
+}
+
+#playBlue:hover {
+    background-color: white;
+    border-color: #2196F3;
+    color: #2196F3;
+}
+
+#playRed:hover {
+    border-color: #F44336;
+    color: #F44336;
+    background-color: white;
+}
+
+.screen-game > .game-field {
+    margin: 0 auto;
+}
+
+.game-row {
+    width: fit-content;
+    display: block;
+    margin: 0 auto;
+    padding: 0;
+    font-size: 0;
+}
+
+.game-row-node {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background-color: #5D4037;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.game-row-link-h {
+    height: 10px;
+    display: inline-block;
+    width: 70px;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.game-row-link-v {
+    height: 70px;
+    width: 10px;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.game-row-link-h-space {
+    display: inline-block;
+    height: 10px;
+    width: 70px;
+    margin: 0;
+    padding: 0;
+}
+
+.blue-snake {
+    background-color: #2196F3;
+    cursor: inherit;
+}
+
+.red-snake {
+    background-color: #F44336;
+    cursor: inherit;
+}
+
+.screen-win, .screen-loose {
+    font-size: 34pt;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+}
+
+.playAgain {
+    margin: 10px auto;
+    display: block;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 2px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 100;
+    font-size: 14pt;
+    outline: none;
+    cursor: pointer;
+    width: 200px;
+    height: 40px;
+    transition: all 0.4s ease-out;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    border-color: #009688;
+    background-color: #009688;
+    color: white;
+}
+
+.playAgain:hover {
+    background-color: white;
+    color: #009688;
+}

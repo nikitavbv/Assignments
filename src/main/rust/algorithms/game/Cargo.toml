@@ -1,0 +1,11 @@
+[package]
+name = "game"
+version = "0.1.0"
+authors = ["Nikita Volobuev <nikitavbv@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+rocket = "0.4.1"
+rocket_contrib = "0.4.1"
+serde = "1.0.92"
+serde_derive = "1.0.92"

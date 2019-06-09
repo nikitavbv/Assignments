@@ -1,0 +1,45 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie-edge">
+        <title>Snakes</title>
+        <link rel="stylesheet" href="/app.css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400" rel="stylesheet">
+    </head>
+    <body>
+        <div class="intro">
+            <h1>Snakes</h1>
+            <div class="screen-menu">
+                <div>
+                    <label for="fieldWidth">Field size:</label>
+                    <input id="fieldWidth" value="5" />x<input id="fieldHeight" value="5" />
+                </div>
+                <div>
+                    <label for="gameMode">Difficulty:</label>
+                    <select id="gameMode">
+                        <option value="2">Easy</option>
+                        <option value="8">Medium</option>
+                        <option value="16" selected>Hard</option>
+                        <option value="999999">Insane</option>
+                    </select>
+                </div>
+                <div>
+                    <button id="playBlue">Blue snake</button>
+                    <button id="playRed">Red snake</button>
+                </div>
+            </div>
+            <div class="screen-game" style="display: none;">
+            </div>
+            <div class="screen-win" style="display: none;">
+                You won
+                <button class="playAgain">Play again</button>
+            </div>
+            <div class="screen-loose" style="display: none;">
+                You lost
+                <button class="playAgain">Try again</button>
+            </div>
+        </div>
+    </body>
+    <script src="/app.js" type="application/javascript"></script>
+</html>

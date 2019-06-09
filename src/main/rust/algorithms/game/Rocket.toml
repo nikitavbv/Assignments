@@ -1,0 +1,6 @@
+[development]
+workers = 10
+
+[production]
+workers = 10
+port = 8080
